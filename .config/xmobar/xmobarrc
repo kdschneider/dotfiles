@@ -7,12 +7,10 @@
    -- ttf-mononoki 
    -- ttf-ubuntu-font-family
    -- htop
-   -- emacs
    -- pacman (Arch Linux)
    -- trayer
-   -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font            = "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:hinting=true"
+Config { font            = "xft:Ubuntu:weight=bold:pixelsize=14:antialias=true:hinting=true"
        , additionalFonts = [ "xft:Mononoki:pixelsize=11:antialias=true:hinting=true"
                            , "xft:Font Awesome 5 Free Solid:pixelsize=12"
                            , "xft:Font Awesome 5 Brands:pixelsize=12"
@@ -24,7 +22,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:h
        --   an integer for the percentage width, so 100 would be 100%.
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
-       , position       = Static { xpos = 10, ypos = 10, width = 1900, height = 30 }
+       , position     = TopSize C 100 25 
        , lowerOnStart = True
        , hideOnStart  = False
        , allDesktops  = True
@@ -34,7 +32,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:h
                         -- Echos a "penguin" icon in front of the kernel output.
                       Run Com "echo" ["<fn=3>\xf17c</fn>"] "penguin" 36000
                         -- Get kernel version (script found in .local/bin)
-                    , Run Com "sh" [".local/bin/kernel"] "kernel" 36000
+                    , Run Com "sh" [".config/xmobar/kernel.sh"] "kernel" 10
                         -- Cpu usage in percent
                     , Run Cpu ["--template", "<fn=2>\xf108</fn>  <total>%","-H","50","--high","red"] 10
                         -- Ram used number and percent
@@ -48,16 +46,16 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:h
                         -- Echos a "bell" icon in front of the pacman updates.
                     , Run Com "echo" ["<fn=2>\xf0f3</fn>"] "bell" 36000
                         -- Check for pacman updates (script found in .local/bin)
-                    , Run Com "sh" [".local/bin/pacupdate"] "pacupdate" 9000
+                    , Run Com "sh" [".config/xmobar/pacupdate.sh"] "pacupdate" 9000
                         -- Time and date
                     , Run Date "<fn=2>\xf017</fn>  %b %d %Y - (%H:%M) " "date" 10
                         -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
-                   -- , Run Com "sh" [".config/xmobar/trayer-padding-icon.sh"] "trayerpad" 20
+                    , Run Com "sh" [".config/xmobar/trayer-padding-icon.sh"] "trayerpad" 20
                         -- Prints out the left side items such as workspaces, layout, etc.
                     , Run UnsafeStdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "   <icon=haskell_20.xpm/>   <fc=#666666>|</fc> %UnsafeStdinReader% }{ <fc=#8FBCBB>%penguin%  %kernel%</fc>    <fc=#A3BE8C><action=`alacritty -e htop`>%cpu%</action></fc>    <fc=#81A1C1><action=`alacritty -e htop`>%memory%</action></fc>    <fc=#EBCB8B>%disku%</fc>    <fc=#B48EAD>%uparrow%  %uptime%</fc>    <fc=#88C0D0>%bell%  <action=`alacritty -e sudo pacman -Syu`>%pacupdate%</action></fc>   <fc=#A3BE8C>%date%</fc>   "
+       , template = "   <icon=haskell_20.xpm/>   <fc=#666666>|</fc> %UnsafeStdinReader% }{ <fc=#8FBCBB>%penguin%  %kernel%</fc>    <fc=#A3BE8C><action=`alacritty -e htop`>%cpu%</action></fc>    <fc=#81A1C1><action=`alacritty -e htop`>%memory%</action></fc>    <fc=#EBCB8B><action=`alacritty -e ncdu -r --color dark`>%disku%</action></fc>    <fc=#B48EAD>%uparrow%  %uptime%</fc>    <fc=#88C0D0>%bell%  <action=`alacritty -e sudo pacman -Syu`>%pacupdate%</action></fc>   <fc=#A3BE8C><action=`alacritty -e khal interactive`>%date%</action></fc> %trayerpad%"
        }
 
