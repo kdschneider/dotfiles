@@ -101,8 +101,6 @@ myStartupHook :: X ()
 myStartupHook = do
     spawnOnce "lxsession &"
     spawnOnce "picom &"
-    spawnOnce "nm-applet &"
-    spawnOnce "volumeicon &"
     spawnOnce "conky -c $HOME/.config/conky/xmonad/palenight.conkyrc"
     spawnOnce "trayer --edge top --align right --widthtype request --padding 0 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x222e3440   --height 25 &"
     spawnOnce "/usr/bin/emacs --daemon &" -- emacs daemon for the emacsclient
@@ -216,15 +214,6 @@ grid     = renamed [Replace "grid"]
            $ mkToggle (single MIRROR)
            $ Grid (16/10)
 
--- Theme for showWName which prints current workspace when you change workspaces.
-myShowWNameTheme :: SWNConfig
-myShowWNameTheme = def
-    { swn_font              = "xft:Ubuntu:bold:size=60"
-    , swn_fade              = 1.0
-    , swn_bgcolor           = "#1c1f24"
-    , swn_color             = "#ffffff"
-    }
-
 -- The layout hook
 myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
                $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
@@ -273,12 +262,9 @@ myKeys =
         , ("M-S-r", spawn "xmonad --restart")         -- Restarts xmonad
         , ("M-S-q", io exitSuccess)                   -- Quits xmonad
 
-    -- KB_GROUP Get Help
-        , ("M-S-/", spawn "~/.xmonad/xmonad_keys.sh") -- Get list of keybindings
-        , ("M-/", spawn "dtos-help")                  -- DTOS help/tutorial videos
-
-    -- KB_GROUP Run Prompt
-        , ("M-S-<Return>", spawn "dmenu_run -i -p \"Run: \"") -- Dmenu
+    -- KB_GROUP Rofi
+        , ("M-S-<Return>", spawn "rofi -show drun -config ~/.config/rofi/themes/dmenu.rasi") -- Rofi
+        , ("M-r f", spawn "rofi -show filebrowser")
 
     -- KB_GROUP Useful programs to have a keybinding for launch
         , ("M-<Return>", spawn (myTerminal))
@@ -363,7 +349,7 @@ main = do
         , modMask            = myModMask
         , terminal           = myTerminal
         , startupHook        = myStartupHook
-        , layoutHook         = showWName' myShowWNameTheme $ myLayoutHook
+        , layoutHook         = myLayoutHook
         , workspaces         = myWorkspaces
         , borderWidth        = myBorderWidth
         , normalBorderColor  = myNormColor
