@@ -11,7 +11,13 @@ export TERM="xterm-256color"                      # getting proper colors
 export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
 export EDITOR="vim"
 export VISUAL="emacsclient -c -a emacs"
+export SHELL="zsh"
 
+# pfetch
+export PF_INFO="ascii title os kernel shell uptime pkgs memory"
+export PF_COL1="4"
+export PF_COL2="5"
+export PF_COL3="3"
 
 #---------#
 # OPTIONS #
