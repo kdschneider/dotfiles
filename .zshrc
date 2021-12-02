@@ -13,6 +13,11 @@ export EDITOR="vim"
 export VISUAL="emacsclient -c -a emacs"
 export SHELL="zsh"
 
+# XDG
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
 # pfetch
 export PF_INFO="ascii title os kernel shell uptime pkgs memory"
 export PF_COL1="4"
