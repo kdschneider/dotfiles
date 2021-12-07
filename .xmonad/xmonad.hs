@@ -76,7 +76,7 @@ myTerminal :: String
 myTerminal = "alacritty"    -- Sets default terminal
 
 myBrowser :: String
-myBrowser = "firefox"  -- Sets qutebrowser as browser
+myBrowser = "brave" 
 
 myEmacs :: String
 myEmacs = "emacsclient -c -a 'emacs' "  -- Makes emacs keybindings easier to type
@@ -211,11 +211,8 @@ myManageHook = composeAll
      , className =? "splash"          --> doFloat
      , className =? "toolbar"         --> doFloat
      , className =? "Yad"             --> doCenterFloat
-     , title =? "Mozilla Firefox"     --> doShift ( myWorkspaces !! 1 )
-     , title =? "Discord"             --> doShift ( myWorkspaces !! 4 )
-     , title =? "Telegram"            --> doShift ( myWorkspaces !! 4 )
-     , title =? "Steam"               --> doShift ( myWorkspaces !! 5 )
-     , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat  -- Float Firefox Dialog
+--     , title =? "Mozilla Firefox"     --> doShift ( myWorkspaces !! 1 )
+     , (className =? "brave" <&&> resource =? "Dialog") --> doFloat  -- Float Firefox Dialog
      , isFullscreen -->  doFullFloat
      ] <+> namedScratchpadManageHook myScratchPads
 

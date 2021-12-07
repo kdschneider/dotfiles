@@ -25,13 +25,6 @@ success_symbol = "[➜](bold green) "
 error_symbol = "[✗](bold red) "
 vicmd_symbol = "[V](bold green) "
 
-[package]
-disabled = false 
-
 [[battery.display]]
 threshold = 20
 style = "bold red"
-
-[directory]
-truncation_symbol = ".../"
-
