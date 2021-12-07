@@ -1,2 +1,1 @@
-agnoster/agnoster-zsh-theme
 zsh-users/zsh-syntax-highlighting

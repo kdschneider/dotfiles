@@ -59,7 +59,7 @@ alias dts='/usr/bin/git --git-dir=$HOME/dotfiles --work-tree=$HOME'
 
 # vim & emacs
 # vim and emacs
-alias vim="vim"
+alias vim="nvim"
 alias em="/usr/bin/emacs -nw"
 alias emacs="emacsclient -c -a 'emacs'"
 alias doomsync="~/.emacs.d/bin/doom sync"
@@ -100,3 +100,5 @@ export PATH="$HOME/.local/bin:$PATH"
 # --------#
 
 pfetch
+eval "$(starship init zsh)"
+
