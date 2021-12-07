@@ -20,6 +20,14 @@ set mouse=a                          " enable mouse click
 set clipboard=unnamedplus           " using system clipboard
 set backupdir=~./config/cache/nvim   " Directory to store backup files.
 
+
+" Install vim-plug if not found
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+
 " plugins
 call plug#begin('~/.config/nvim/plugged')
   Plug 'airblade/vim-gitgutter'

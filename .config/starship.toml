@@ -21,10 +21,13 @@ $shell\
 $character"""
 
 [character]
-success_symbol = "[➜](bold green) "
-error_symbol = "[✗](bold red) "
+success_symbol = "[·](bold green) "
+error_symbol = "[·](bold red) "
 vicmd_symbol = "[V](bold green) "
 
 [[battery.display]]
 threshold = 20
 style = "bold red"
+
+[cmd_duration]
+min_time = 600000
