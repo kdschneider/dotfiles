@@ -99,6 +99,10 @@ export PATH="$HOME/.local/bin:$PATH"
 # AUTORUN #
 # --------#
 
-pfetch
+# set colors with pywal
+(cat ~/.cache/wal/sequences &)
+source ~/.cache/wal/colors-tty.sh # tty support
+
+neofetch
 eval "$(starship init zsh)"
 
