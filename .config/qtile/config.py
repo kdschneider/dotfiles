@@ -110,8 +110,8 @@ dgroups_key_binder = simple_key_binder(mod)
 layout_theme = {
   "border_width": 2,
   "margin": 15,
-  "border_focus": colors[6],
-  "border_normal": colors[7]
+  "border_focus": colors[7],
+  "border_normal": colors[4]
 }
 
 layouts = [
@@ -152,15 +152,6 @@ layouts = [
 ]
 
 
-#colors = [["#282c34", "#282c34"], # panel background
-#          ["#3d3f4b", "#434758"], # background for current screen tab
-#          ["#ffffff", "#ffffff"], # font color for group names
-#          ["#ff5555", "#ff5555"], # border line color for current tab
-#          ["#74438f", "#74438f"], # border line color for 'other tabs' and color for 'odd widgets'
-#          ["#4f76c7", "#4f76c7"], # color for the 'even widgets'
-#          ["#e1acff", "#e1acff"], # window name
-#          ["#ecbbfb", "#ecbbfb"]] # backbround for inactive screens
-
 prompt = "{0}@{1}: ".format(os.environ["USER"], socket.gethostname())
 
 # Screens
@@ -195,12 +186,6 @@ myGroups = widget.GroupBox(
   highlight_color = [colors[0], colors[0]]
 )
 
-myCurrentLayoutIcon = widget.CurrentLayoutIcon(
-  custom_icon_paths = [os.path.expanduser("~/.config/qtile/icons")],
-  padding = 0,
-  scale = 0.7
-)
-
 myCurrentLayout = widget.CurrentLayout(
   padding = 5
 )
@@ -222,6 +207,13 @@ myVolume = widget.Volume(
 myTray = widget.Systray()
 
 myMusic = widget.Cmus()
+
+myUpdates = widget.CheckUpdates(
+  foreground = widget_foreground,
+  colour_have_updates = widget_foreground,
+  colour_no_updates = widget_foreground,
+  mouse_callbacks = {"Button1": lambda: qtile.cmd_spawn("alacritty -e sudo pacman -Syu")}
+)
 
 # screens
 screens = [
@@ -247,9 +239,10 @@ screens = [
           foreground = widget_foreground
         ),
         mySeperator,
+        
+        myUpdates,
 
         myVolume,
-        myCurrentLayoutIcon,
         mySeperator,
         myClock,
         
@@ -261,9 +254,9 @@ screens = [
       background = colors[0], 
       border_color = colors[2],
       border_width = 0,
-      margin = [10, 15, 0, 15],
+      margin = [0, 0, 0, 0],
       opacity = 1,
-      size = 30
+      size = 35 
     )
   )
 ]
