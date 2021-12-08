@@ -2,5 +2,4 @@
 
 picom &
 /usr/bin/emacs --daemon &
-nitrogen --restore &
-
+wal -R

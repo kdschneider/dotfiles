@@ -14,6 +14,18 @@ mod = "mod1"              # Sets mod key to SUPER/WINDOWS
 myTerm = "alacritty"      # My terminal of choice
 myBrowser = "brave" # My terminal of choice
 
+# Set Colors with pywal
+colors = []
+cache = os.path.expanduser('~/.cache/wal/colors')
+def load_colors(cache):
+    with open(cache, 'r') as file:
+        for i in range(8):
+            colors.append(file.readline().strip())
+    colors.append('#ffffff')
+    lazy.reload()
+load_colors(cache)
+
+
 # Keys
 keys = [
 
@@ -98,8 +110,8 @@ dgroups_key_binder = simple_key_binder(mod)
 layout_theme = {
   "border_width": 2,
   "margin": 15,
-  "border_focus": "e1acff",
-  "border_normal": "1D2330"
+  "border_focus": colors[6],
+  "border_normal": colors[7]
 }
 
 layouts = [
@@ -139,16 +151,6 @@ layouts = [
     #layout.Floating(**layout_theme)
 ]
 
-# Set Colors with pywal
-colors = []
-cache = os.path.expanduser('~/.cache/wal/colors')
-def load_colors(cache):
-    with open(cache, 'r') as file:
-        for i in range(8):
-            colors.append(file.readline().strip())
-    colors.append('#ffffff')
-    lazy.reload()
-load_colors(cache)
 
 #colors = [["#282c34", "#282c34"], # panel background
 #          ["#3d3f4b", "#434758"], # background for current screen tab
@@ -165,70 +167,97 @@ prompt = "{0}@{1}: ".format(os.environ["USER"], socket.gethostname())
 from libqtile.config import Screen
 from libqtile import bar, widget
 
-# My Widgets
+# widget colors
+widget_foreground = colors[7]
 
+# My Widgets
 mySeperator = widget.Sep(
   linewidth = 0,
-  padding = 6,
-  foreground = colors[2],
-  background = colors[0]
+  padding = 8,
 )
 
 mySystemIcon = widget.Image(
-  background = None,
+  background = colors[0],
   filename = "~/.config/qtile/icons/python-white.png",
   margin = 3,
-  mouse_callbacks = {"Button1": lambda: qtile.cmd_spawn("alacritty")}
+  mouse_callbacks = {
+    "Button1": lambda: qtile.cmd_spawn("sh" + " " + os.path.expanduser("~/.config/qtile/scripts/wal_dark.sh")),
+    "Button3": lambda: qtile.cmd_spawn("sh" + " " + os.path.expanduser("~/.config/qtile/scripts/wal_light.sh"))
+  }
 )
 
-myGroups = widget.GroupBox()
+myGroups = widget.GroupBox(
+  this_current_screen_border = widget_foreground,
+  active = widget_foreground,
+  inactive = colors[4],
+  disable_drag = True,
+  highlight_method = "line",
+  highlight_color = [colors[0], colors[0]]
+)
 
 myCurrentLayoutIcon = widget.CurrentLayoutIcon(
   custom_icon_paths = [os.path.expanduser("~/.config/qtile/icons")],
-  foreground = colors[0],
-  background = colors[4],
   padding = 0,
   scale = 0.7
 )
 
 myCurrentLayout = widget.CurrentLayout(
-  foreground = colors[2],
-  background = colors[4],
   padding = 5
 )
 
 myClock = widget.Clock(
-  #foreground = colors[2],
-  #background = colors[5],
-  #format = "%A, %B %d - %H:%M "
+  foreground = widget_foreground,
+  format = "%A, %B %d - %H:%M"
 )
 
 mySpacer = widget.Spacer(
   length = bar.STRETCH
 )
 
+myVolume = widget.Volume(
+  volume_app = "pavucontrol",
+  foreground = widget_foreground 
+)
+
+myTray = widget.Systray()
+
+myMusic = widget.Cmus()
+
+# screens
 screens = [
   Screen(
     top = bar.Bar(
       
-      # Widgtes
+      # Widgets
       widgets = [
 
         mySeperator,
         mySystemIcon,
+        mySeperator,
+
         myGroups,  
         
         mySpacer,
+        myMusic,
 
-        myCurrentLayoutIcon,
-        myCurrentLayout,
-
+        myTray,
+        mySeperator,
+        widget.TextBox(
+          text = "|",
+          foreground = widget_foreground
+        ),
         mySeperator,
 
-        myClock
+        myVolume,
+        myCurrentLayoutIcon,
+        mySeperator,
+        myClock,
+        
+        mySeperator
       ],
 
       # General Settings
+      foreground = colors[5],
       background = colors[0], 
       border_color = colors[2],
       border_width = 0,

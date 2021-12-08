@@ -4,4 +4,5 @@ configuration {
   show-icons:         true;
   icon-theme:         "Papirus";
 }
-@theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
+
+@import "~/.cache/wal/colors-rofi-dark"
