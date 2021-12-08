@@ -21,6 +21,7 @@ set clipboard=unnamedplus           " using system clipboard
 set backupdir=~./config/cache/nvim   " Directory to store backup files.
 
 
+
 " Install vim-plug if not found
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
@@ -40,5 +41,8 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'chrisbra/csv.vim'
   Plug 'junegunn/goyo.vim'
   Plug 'rafaqz/citation.vim'
+  Plug 'dylanaraps/wal.vim'
 call plug#end()
  
+colorscheme wal
+
