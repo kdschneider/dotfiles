@@ -192,7 +192,11 @@ myCurrentLayout = widget.CurrentLayout(
 
 myClock = widget.Clock(
   foreground = widget_foreground,
-  format = "%A, %B %d - %H:%M"
+  format = "%A, %B %d - %H:%M",
+  mouse_callbacks = {
+    "Button1": lambda: qtile.cmd_spawn("sh" + " " + os.path.expanduser("~/.config/qtile/scripts/wal_dark.sh"))
+  }
+
 )
 
 mySpacer = widget.Spacer(
@@ -223,8 +227,6 @@ screens = [
       # Widgets
       widgets = [
 
-        mySeperator,
-        mySystemIcon,
         mySeperator,
 
         myGroups,  

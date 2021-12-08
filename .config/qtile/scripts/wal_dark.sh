@@ -2,7 +2,7 @@
 
 WALDIR="$HOME/.config/wallpapers/"
 
-wal -i $WALDIR --saturate 0.3 --iterative        # set wallpaper
+wal -i $WALDIR --iterative        # set wallpaper
 
 FILEPATH=$(cat "$HOME"/.cache/wal/wal)
 cp "$FILEPATH" "/usr/share/wallpapers/wal"
