@@ -15,7 +15,7 @@
       doom-variable-pitch-font (font-spec :family "Overpass Nerd Font" :size 15))
 
 ;; THEME
-(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-gruvbox)
 
 ;; ORG
 (setq org-directory "~/org/")
