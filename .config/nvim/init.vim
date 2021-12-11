@@ -14,7 +14,7 @@ set autoindent                      " indent a new line
 set number                          " add line numbers
 set relativenumber
 set wildmode=longest,list           " get bash-like ta completions
-set cc=80                           " set an 80 column
+"set cc=80                           " set an 80 column
 syntax on                           " syntax highlighting
 set mouse=a                          " enable mouse click
 set clipboard=unnamedplus           " using system clipboard
@@ -32,16 +32,16 @@ endif
 " plugins
 call plug#begin('~/.config/nvim/plugged')
   Plug 'airblade/vim-gitgutter'
+  Plug 'chrisbra/csv.vim'
+  Plug 'dylanaraps/wal.vim'
   Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
+  Plug 'junegunn/goyo.vim'
+  Plug 'rafaqz/citation.vim'
   Plug 'scrooloose/nerdtree'
   Plug 'scrooloose/syntastic'
   Plug 'tpope/vim-fugitive'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
-  Plug 'chrisbra/csv.vim'
-  Plug 'junegunn/goyo.vim'
-  Plug 'rafaqz/citation.vim'
-  Plug 'dylanaraps/wal.vim'
 call plug#end()
  
 colorscheme wal
