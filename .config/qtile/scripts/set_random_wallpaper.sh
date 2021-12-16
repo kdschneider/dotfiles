@@ -1,8 +1,8 @@
 #!/bin/sh
 
-WALDIR="$HOME/.config/wallpapers/"
+WALDIR="$HOME/pictures/wallpapers/"
 
-wal -i $WALDIR --iterative        # set wallpaper
+wal -i $WALDIR --backend wal 
 
 FILEPATH=$(cat "$HOME"/.cache/wal/wal)
 cp "$FILEPATH" "/usr/share/wallpapers/wal"

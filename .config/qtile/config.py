@@ -3,7 +3,7 @@ import re
 import socket
 import subprocess
 from libqtile import qtile
-from libqtile.config import Click, Drag, Group, KeyChord, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, ScratchPad, DropDown, KeyChord, Key, Match, Screen
 from libqtile.command import lazy
 from libqtile import layout, bar, widget, hook
 from libqtile.lazy import lazy
@@ -66,157 +66,150 @@ keys = [
   Key([mod, "shift"], "space", lazy.layout.toggle_split(), desc='Toggle between split and unsplit sides of stack'),
   
   ### Emacs
-  KeyChord(["control"],"e", [
-    Key([], "e", lazy.spawn("emacsclient -c -a 'emacs'"), desc='Launch Emacs'),
-    Key([], "b", lazy.spawn("emacsclient -c -a 'emacs' --eval '(ibuffer)'"), desc='Launch ibuffer inside Emacs'),
-    Key([], "d", lazy.spawn("emacsclient -c -a 'emacs' --eval '(dired nil)'"), desc='Launch dired inside Emacs'),
-    Key([], "i", lazy.spawn("emacsclient -c -a 'emacs' --eval '(erc)'"), desc='Launch erc inside Emacs'),
-    Key([], "m", lazy.spawn("emacsclient -c -a 'emacs' --eval '(mu4e)'"), desc='Launch mu4e inside Emacs'),
-    Key([], "n", lazy.spawn("emacsclient -c -a 'emacs' --eval '(elfeed)'"), desc='Launch elfeed inside Emacs'),
-    Key([], "s", lazy.spawn("emacsclient -c -a 'emacs' --eval '(eshell)'"), desc='Launch the eshell inside Emacs'),
-    Key([], "v", lazy.spawn("emacsclient -c -a 'emacs' --eval '(+vterm/here nil)'"), desc='Launch vterm inside Emacs')
-  ]),
+  Key([mod], "e", lazy.spawn("emacsclient -c -a 'emacs'"), desc='Launch Emacs'),
   
   # Rofi 
   Key([mod, "shift"], "Return", lazy.spawn("rofi -show run")),
   KeyChord([mod], "p", [
-    Key([], "e", lazy.spawn("./dmscripts/dm-confedit"), desc='Choose a config file to edit'),
-    Key([], "i", lazy.spawn("./dmscripts/dm-maim"), desc='Take screenshots via dmenu'),
-    Key([], "k", lazy.spawn("./dmscripts/dm-kill"), desc='Kill processes via dmenu'),
-    Key([], "l", lazy.spawn("./dmscripts/dm-logout"), desc='A logout menu'),
-    Key([], "m", lazy.spawn("./dmscripts/dm-man"), desc='Search manpages in dmenu'),
-    Key([], "o", lazy.spawn("./dmscripts/dm-bookman"), desc='Search your qutebrowser bookmarks and quickmarks'),
-    Key([], "r", lazy.spawn("./dmscripts/dm-reddit"), desc='Search reddit via dmenu'),
-    Key([], "s", lazy.spawn("./dmscripts/dm-websearch"), desc='Search various search engines via dmenu'),
-    Key([], "p", lazy.spawn("passmenu"), desc='Retrieve passwords with dmenu')
-  ])
+    Key([], "p", lazy.spawn("rofi -show run"))
+  ]),
+
+  # ScratchPads
+  Key([mod], "t", lazy.group['scratchpad'].dropdown_toggle('terminal'))
 ]
 
 # Workspaces/Groups
 groups = [
-    Group(" 1 ", layout='monadtall')
-  , Group(" 2 ", layout='monadtall')
-  , Group(" 3 ", layout='monadtall')
-  , Group(" 4 ", layout='monadtall')
-  , Group(" 5 ", layout='monadtall')
-]
+  Group(
+    name = "home", 
+    layout = "monadtall", 
+    label = "\uf004",
+    position = 1
+  ), 
+  Group(
+    name = "www", 
+    layout = "monadtall", 
+    label = "\uf0c2",
+    position = 2,
+    matches = [
+      Match(wm_class = "brave-browser"),
+      Match(wm_class = "qutebrowser")
+    ]
+  ), 
+  Group(
+    name = "code", 
+    layout = "monadtall", 
+    label = "\ufb8a",
+    position = 3,
+    matches = [
+      Match(wm_class = "emacs")
+    ]
+  ), 
+  Group(
+    name = "terminal",
+    layout = "monadtall",
+    label = "\ue795",
+    position = 4,
+  ),
+  Group(
+    name = "social", 
+    layout = "monadtall", 
+    label = "\uf1d8",
+    position = 5,
+    matches = [
+      Match(wm_class = "discord"),
+      Match(wm_class = "telegram-desktop")
+    ]
+  ),
+  Group(
+    name = "steam",
+    layout = "monadtall",
+    label = "\uf11b",
+    init = False,
+    persist = False,
+    position = 6,
+    matches = [
+      Match(wm_class = "Steam")
+    ]
+  ),
 
+  Group(
+    name = "settings",
+    layout = "monadtall",
+    label = "\uf013",
+    init = False,
+    persist = False,
+    position = 8,
+    matches = [
+      Match(wm_class = "qBittorrent"),
+      Match(wm_class = "org.gnome.DejaDup")
+    ]
+  ),
+
+  Group(
+    name = "csgo",
+    layout = "full",
+    label = "\ufc01",
+    init = False,
+    persist = False,
+    position = 7,
+    matches = [
+      Match(wm_class = "csgo_linux64")
+    ]
+  ),
+
+  # Scratchpads
+#  ScratchPad(
+#    name = "scratchpad",
+#    position = 10,
+#    dropdowns = [
+#      DropDown(
+#        name = "terminal", 
+#        cmd = "alacritty",
+#        height = 0.5,
+#        width = 0.5,
+#        x = 0.25,
+#        y = 0
+#      )
+#    ]
+#  )
+]
 # Allow MODKEY+[0 through 9] to bind to groups, see https://docs.qtile.org/en/stable/manual/config/groups.html
 # MOD4 + index Number : Switch to Group[index]
 # MOD4 + shift + index Number : Send active window to another Group
 from libqtile.dgroups import simple_key_binder
 dgroups_key_binder = simple_key_binder(mod)
 
+#for i in range(1,6):
+#  keys.append(Key([mod], i.name, lazy.group[i.name].toscreen()))
+#  keys.append(Key([mod, "shift"], i.name, lazy.window.togroup(i.name), lazy.group[i.name].toscreen()))
+
 layout_theme = {
   "border_width": 2,
   "margin": 15,
   "border_focus": colors[7],
-  "border_normal": colors[4]
+  "border_normal": colors[0],
 }
 
 layouts = [
-    #layout.MonadWide(**layout_theme),
-    #layout.Bsp(**layout_theme),
-    #layout.Stack(stacks=2, **layout_theme),
-    #layout.Columns(**layout_theme),
-    #layout.RatioTile(**layout_theme),
-    #layout.Tile(shift_windows=True, **layout_theme),
-    #layout.VerticalTile(**layout_theme),
-    #layout.Matrix(**layout_theme),
-    #layout.Zoomy(**layout_theme),
+    layout.Zoomy(**layout_theme),
     layout.MonadTall(**layout_theme),
     layout.Max(**layout_theme),
-    #layout.Stack(num_stacks=2),
-    #layout.RatioTile(**layout_theme),
-    #layout.TreeTab(
-    #     font = "Ubuntu",
-    #     fontsize = 10,
-    #     sections = ["FIRST", "SECOND", "THIRD", "FOURTH"],
-    #     section_fontsize = 10,
-    #     border_width = 2,
-    #     bg_color = "1c1f24",
-    #     active_bg = "c678dd",
-    #     active_fg = "000000",
-    #     inactive_bg = "a9a1e1",
-    #     inactive_fg = "1c1f24",
-    #     padding_left = 0,
-    #     padding_x = 0,
-    #     padding_y = 5,
-    #     section_top = 10,
-    #     section_bottom = 20,
-    #     level_shift = 8,
-    #     vspace = 3,
-    #     panel_width = 200
-    #     ),
-    #layout.Floating(**layout_theme)
 ]
 
-
-prompt = "{0}@{1}: ".format(os.environ["USER"], socket.gethostname())
 
 # Screens
 from libqtile.config import Screen
 from libqtile import bar, widget
 
-# widget colors
-widget_foreground = colors[7]
+prompt = "{0}@{1}: ".format(os.environ["USER"], socket.gethostname())
 
-# My Widgets
-mySeperator = widget.Sep(
-  linewidth = 0,
-  padding = 8,
-)
-
-mySystemIcon = widget.Image(
+widget_defaults = dict(
+  font = "FiraCode Nerd Font Mono",
+  fontsize = 15, 
+  padding = 3,
   background = colors[0],
-  filename = "~/.config/qtile/icons/python-white.png",
-  margin = 3,
-  mouse_callbacks = {
-    "Button1": lambda: qtile.cmd_spawn("sh" + " " + os.path.expanduser("~/.config/qtile/scripts/wal_dark.sh")),
-    "Button3": lambda: qtile.cmd_spawn("sh" + " " + os.path.expanduser("~/.config/qtile/scripts/wal_light.sh"))
-  }
-)
-
-myGroups = widget.GroupBox(
-  this_current_screen_border = widget_foreground,
-  active = widget_foreground,
-  inactive = colors[4],
-  disable_drag = True,
-  highlight_method = "line",
-  highlight_color = [colors[0], colors[0]]
-)
-
-myCurrentLayout = widget.CurrentLayout(
-  padding = 5
-)
-
-myClock = widget.Clock(
-  foreground = widget_foreground,
-  format = "%A, %B %d - %H:%M",
-  mouse_callbacks = {
-    "Button1": lambda: qtile.cmd_spawn("sh" + " " + os.path.expanduser("~/.config/qtile/scripts/wal_dark.sh"))
-  }
-
-)
-
-mySpacer = widget.Spacer(
-  length = bar.STRETCH
-)
-
-myVolume = widget.Volume(
-  volume_app = "pavucontrol",
-  foreground = widget_foreground 
-)
-
-myTray = widget.Systray()
-
-myMusic = widget.Cmus()
-
-myUpdates = widget.CheckUpdates(
-  foreground = widget_foreground,
-  colour_have_updates = widget_foreground,
-  colour_no_updates = widget_foreground,
-  mouse_callbacks = {"Button1": lambda: qtile.cmd_spawn("alacritty -e sudo pacman -Syu")}
+  foreground = colors[7]
 )
 
 # screens
@@ -226,29 +219,116 @@ screens = [
       
       # Widgets
       widgets = [
-
-        mySeperator,
-
-        myGroups,  
         
-        mySpacer,
-        myMusic,
-
-        myTray,
-        mySeperator,
-        widget.TextBox(
-          text = "|",
-          foreground = widget_foreground
+        widget.Spacer(length = 12),
+        
+        # Groups
+        widget.GroupBox(
+            active = colors[7]
+          , block_highlight_text_color = colors[3]
+          , disable_drag = True
+          , highlight_color = [colors[0], colors[0]]
+          , highlight_method = "line"
+          , inactive = colors[7]
+          , this_current_screen_border = colors[7]
+          , fontsize = 20
+          , padding = 10
         ),
-        mySeperator,
         
-        myUpdates,
+        #widget.Spacer(length = 15),
+        #widget.CurrentLayout(),
+        #widget.Spacer(length = 15),
+        #widget.WindowCount(),
+        #widget.Spacer(length = 15),
+        #widget.WindowName(),
 
-        myVolume,
-        mySeperator,
-        myClock,
+        widget.Spacer(),
+
+        widget.Cmus(
+          noplay_color = colors[3],
+          play_color = colors[7]
+        ),
+
+        widget.Spacer(),
         
-        mySeperator
+        # Updates Widget
+        widget.CheckUpdates(
+          colour_have_updates = colors[7],
+          colour_no_updates = colors[7],
+          display_format = "{updates}",
+          mouse_callbacks = {
+            #"Button1": lambda: qtile.cmd_spawn("qtile run-cmd -g scratchpad -f alacritty")
+            "Button1": lambda: qtile.cmd_spawn("alacritty -e yay")
+          },
+          update_interval = 60,
+          distro = "Arch_yay"
+        ),
+
+        # Updates Widget
+        widget.CheckUpdates(
+          colour_have_updates = colors[7],
+          colour_no_updates = colors[7],
+          display_format = "\uf062",
+          mouse_callbacks = {
+            #"Button1": lambda: qtile.cmd_spawn("qtile run-cmd -g scratchpad -f alacritty")
+            "Button1": lambda: qtile.cmd_spawn("alacritty -e yay")
+          },
+          update_interval = 60,
+          distro = "Arch_yay",
+          fontsize = 22
+        ),
+
+        widget.Spacer(length = 15),
+        
+        # SysTray
+        widget.WidgetBox(
+          widgets = [
+            widget.Systray(),
+            widget.Spacer(15)
+          ],
+          fontsize = 22,
+          text_closed = "\uf6d7",
+          text_open = "\ufcc1",
+          close_button_location = "right",
+          padding = 15
+        ),
+        widget.Spacer(length = 15),
+
+        # Volume
+        widget.Volume(
+          volume_app = "pavucontrol"
+        ),
+        
+        widget.TextBox(
+          text = "\uf025",
+          fontsize = 22 
+        ),
+       
+        widget.Spacer(length = 15),
+
+        # Clock
+        widget.Clock(
+          format = "%H:%M",
+          mouse_callbacks = {
+            "Button1": lambda: qtile.cmd_spawn(
+              "sh" + " " + os.path.expanduser(
+                "~/.config/qtile/scripts/set_gruv_dark.sh"
+              )
+            ),
+            "Button2": lambda: qtile.cmd_spawn(
+              "sh" + " " + os.path.expanduser(
+                "~/.config/qtile/scripts/set_random_wallpaper.sh"
+              )
+            ),
+            "Button3": lambda: qtile.cmd_spawn(
+              "sh" + " " + os.path.expanduser(
+                "~/.config/qtile/scripts/set_gruv_light.sh"
+              )
+            )
+          }
+        ),
+
+        widget.Spacer(length = 12)
       ],
 
       # General Settings
@@ -273,12 +353,14 @@ mouse = [
 ]
 
 dgroups_app_rules = []  # type: List
-follow_mouse_focus = False 
+follow_mouse_focus = True 
 bring_front_click = True
 cursor_warp = False
 
 # Floating
-floating_layout = layout.Floating(float_rules=[
+floating_layout = layout.Floating(
+  float_rules=[
+    Match(title = "Settings"),
     # Run the utility of `xprop` to see the wm class and name of an X client.
     # default_float_rules include: utility, notification, toolbar, splash, dialog,
     # file_progress, confirm, download and error.
@@ -287,7 +369,9 @@ floating_layout = layout.Floating(float_rules=[
     Match(title='Qalculate!'),        # qalculate-gtk
     Match(wm_class='kdenlive'),       # kdenlive
     Match(wm_class='pinentry-gtk-2'), # GPG key password entry
-])
+  ],
+  **layout_theme
+)
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
