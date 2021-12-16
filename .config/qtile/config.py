@@ -134,19 +134,6 @@ groups = [
   ),
 
   Group(
-    name = "settings",
-    layout = "monadtall",
-    label = "\uf013",
-    init = False,
-    persist = False,
-    position = 8,
-    matches = [
-      Match(wm_class = "qBittorrent"),
-      Match(wm_class = "org.gnome.DejaDup")
-    ]
-  ),
-
-  Group(
     name = "csgo",
     layout = "full",
     label = "\ufc01",
@@ -155,6 +142,31 @@ groups = [
     position = 7,
     matches = [
       Match(wm_class = "csgo_linux64")
+    ]
+  ),
+
+  Group(
+    name = "zoom",
+    layout = "full",
+    label = "\ufcac",
+    init = False,
+    persist = False,
+    position = 8,
+    matches = [
+      Match(wm_class = "zoom")
+    ]
+  ),
+  
+  Group(
+    name = "settings",
+    layout = "monadtall",
+    label = "\uf013",
+    init = False,
+    persist = False,
+    position = 9,
+    matches = [
+      Match(wm_class = "qBittorrent"),
+      Match(wm_class = "org.gnome.DejaDup")
     ]
   ),
 
