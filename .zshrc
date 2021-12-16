@@ -28,6 +28,9 @@ export PF_COL3="3"
 # OPTIONS #
 # --------#
 
+# Enable vi mode
+bindkey -v
+
 # Navigation
 setopt AUTO_CD
 setopt AUTO_PUSHD
