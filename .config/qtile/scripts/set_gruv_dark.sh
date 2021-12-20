@@ -12,6 +12,7 @@ cp "$WALLPAPER_CACHE" "/usr/share/wallpapers/wal"
 
 # apply to programs
 pywal-discord
+cp $HOME/.cache/wal/colors-apple-music.css $HOME/.config/AppleMusic/themes/burple.css
 
 # restart qtile
 qtile shell --command "restart()"

@@ -69,7 +69,7 @@ keys = [
   Key([mod], "e", lazy.spawn("emacsclient -c -a 'emacs'"), desc='Launch Emacs'),
   
   # Rofi 
-  Key([mod, "shift"], "Return", lazy.spawn("rofi -show run")),
+  Key([mod, "shift"], "Return", lazy.spawn("rofi -show drun")),
   KeyChord([mod], "p", [
     Key([], "p", lazy.spawn("rofi -show run"))
   ]),
@@ -134,14 +134,15 @@ groups = [
   ),
 
   Group(
-    name = "csgo",
+    name = "games",
     layout = "full",
     label = "\ufc01",
     init = False,
     persist = False,
     position = 7,
     matches = [
-      Match(wm_class = "csgo_linux64")
+      Match(wm_class = "csgo_linux64"),
+      Match(wm_class = "TotalWarhammer2")
     ]
   ),
 
@@ -207,6 +208,7 @@ layouts = [
     layout.Zoomy(**layout_theme),
     layout.MonadTall(**layout_theme),
     layout.Max(**layout_theme),
+    layout.Bsp(**layout_theme)
 ]
 
 
@@ -237,7 +239,7 @@ screens = [
         # Groups
         widget.GroupBox(
             active = colors[7]
-          , block_highlight_text_color = colors[3]
+          , block_highlight_text_color = colors[2]
           , disable_drag = True
           , highlight_color = [colors[0], colors[0]]
           , highlight_method = "line"
