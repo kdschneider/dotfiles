@@ -12,7 +12,7 @@ from typing import List  # noqa: F401from typing import List  # noqa: F401
 
 mod = "mod1"              # Sets mod key to SUPER/WINDOWS
 myTerm = "alacritty"      # My terminal of choice
-myBrowser = "brave" # My terminal of choice
+myBrowser = "waterfox-g4"    # My terminal of choice
 
 # Set Colors with pywal
 colors = []
