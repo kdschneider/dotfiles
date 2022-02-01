@@ -65,10 +65,14 @@ alias dts='/usr/bin/git --git-dir=$HOME/dotfiles --work-tree=$HOME'
 alias vim="nvim"
 alias em="/usr/bin/emacs -nw"
 alias emacs="emacsclient -c -a 'emacs'"
-alias doomsync="~/.emacs.d/bin/doom sync"
-alias doomdoctor="~/.emacs.d/bin/doom doctor"
-alias doomupgrade="~/.emacs.d/bin/doom upgrade"
-alias doompurge="~/.emacs.d/bin/doom purge"
+
+# Doom Emacs
+alias doomsync="$HOME/.emacs.d/bin/doom sync"
+alias doomupgrade="$HOME/.emacs.d/bin/doom upgrade"
+alias doomdoctor="$HOME/.emacs.d/bin/doom doctor"
+alias doompurge="$HOME/.emacs.d/bin/doom purge"
+alias doomclean="$HOME/.emacs.d/bin/doom clean"
+alias doombuild="$HOME/.emacs.d/bin/doom build"
 
 # Changing "ls" to "exa"
 alias ls='exa -al --color=always --group-directories-first' # my preferred listing
