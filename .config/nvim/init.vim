@@ -33,7 +33,6 @@ endif
 call plug#begin('~/.config/nvim/plugged')
   Plug 'airblade/vim-gitgutter'
   Plug 'chrisbra/csv.vim'
-  Plug 'dylanaraps/wal.vim'
   Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
   Plug 'junegunn/goyo.vim'
   Plug 'rafaqz/citation.vim'
@@ -43,6 +42,4 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
 call plug#end()
- 
-colorscheme wal
 
