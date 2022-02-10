@@ -58,7 +58,7 @@ setopt HIST_VERIFY
 # ALIASES #
 #---------#
 
-alias dts='/usr/bin/git --git-dir=$HOME/dotfiles --work-tree=$HOME'
+alias dts='/usr/bin/git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
 # vim & emacs
 # vim and emacs
