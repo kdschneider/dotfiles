@@ -2,7 +2,6 @@
 
 autoload -U compinit; compinit
 
-
 #--------#
 # EXPORT #
 #--------#

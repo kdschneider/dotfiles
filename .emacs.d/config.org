@@ -2,11 +2,66 @@
 #+AUTHOR: Konstantin D. Schneider
 #+PROPERTY: header-args :tangle init.el
 
+* Table of Contents
+  :PROPERTIES:
+  :TOC:      :include all :depth 2
+  :END:
+  
+:CONTENTS:
+- [[#table-of-contents][Table of Contents]]
+- [[#system-settings][System Settings]]
+- [[#package-management][Package Management]]
+  - [[#setup-package-archives][Setup Package Archives]]
+  - [[#use-package][Use-Package]]
+- [[#keyboard-bindings][Keyboard bindings]]
+  - [[#leader-bindings-with-generalel][Leader Bindings with general.el]]
+  - [[#global-keybindings][Global Keybindings]]
+  - [[#mode-specific-keybindings][Mode specific Keybindings]]
+  - [[#keybinding-panel][Keybinding Panel]]
+  - [[#becoming-evil][Becoming Evil]]
+- [[#general-configuration][General Configuration]]
+  - [[#user-interface][User Interface]]
+  - [[#visuals][Visuals]]
+  - [[#dashboard][Dashboard]]
+  - [[#emojis][Emojis]]
+  - [[#helpful][Helpful]]
+  - [[#command-log-mode][Command log mode]]
+  - [[#notifications][Notifications]]
+- [[#editor-configuration][Editor Configuration]]
+  - [[#tab-width][Tab Width]]
+  - [[#commenting-lines][Commenting Lines]]
+  - [[#origami-for-code-folding][Origami for Code Folding]]
+  - [[#stateful-keymaps-with-hydra][Stateful Keymaps with Hydra]]
+  - [[#highlight-matching-braces][Highlight Matching Braces]]
+  - [[#set-margins-for-modes][Set Margins for Modes]]
+- [[#completionselection-system][Completion/Selection System]]
+  - [[#ivy][Ivy]]
+  - [[#counsel][Counsel]]
+- [[#file-browsing][File Browsing]]
+  - [[#dired][Dired]]
+  - [[#open-files-externally][Open Files Externally]]
+  - [[#treemacs][Treemacs]]
+- [[#org-mode][Org Mode]]
+  - [[#org-configuration][Org Configuration]]
+  - [[#bullets][Bullets]]
+  - [[#fonts--faces][Fonts & Faces]]
+  - [[#table-of-contents][Table of Contents]]
+  - [[#org-roam][org-roam]]
+- [[#project-management][Project Management]]
+  - [[#projectile][Projectile]]
+  - [[#git][Git]]
+- [[#ide][IDE]]
+  - [[#lsp][LSP]]
+  - [[#polymode][Polymode]]
+  - [[#ess][ESS]]
+:END:
+
+
 * System Settings
 
   System setup.
   
-
+  
 * Package Management
 ** Setup Package Archives
    
@@ -14,8 +69,8 @@
 
   (require 'package)
   (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
+			   ("org" . "https://orgmode.org/elpa/")
+			   ("elpa" . "https://elpa.gnu.org/packages/")))
 
   (package-initialize)
 
@@ -40,62 +95,7 @@
 
 
 * Keyboard bindings
-** ESC Cancels all
-   
-#+begin_src emacs-lisp
-
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-#+end_src
-
-** Rebind C-u
-
-  Since I let evil-mode take over C-u for buffer scrolling, I need to re-bind the universal-argument command to another key sequence. I’m choosing C-M-u for this purpose.
-
-#+begin_src emacs-lisp
-
-  (global-set-key (kbd "C-M-u") 'universal-argument)
-
-#+end_src
-
-** Super/Meta Key 
-
-#+begin_src emacs-lisp
-
-  (defconst IS-MAC     (eq system-type 'darwin))
-  (defconst IS-LINUX   (eq system-type 'gnu/linux))
-  (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
-  (defconst IS-BSD     (or IS-MAC (eq system-type 'berkeley-unix)))
-
-    (cond
-     (IS-MAC
-      ;; mac-* variables are used by the special emacs-mac build of Emacs by
-      ;; Yamamoto Mitsuharu, while other builds use ns-*.
-      (setq mac-command-modifier      'super
-            ns-command-modifier       'super
-            mac-option-modifier       'meta
-            ns-option-modifier        'meta
-            mac-right-option-modifier 'none
-            ns-right-option-modifier  'none))
-     (IS-WINDOWS
-      (setq w32-lwindow-modifier 'super
-            w32-rwindow-modifier 'super)))
-
-#+end_src
-
-** Keybinding Panel
-  
-#+begin_src emacs-lisp
-
-  (use-package which-key
-    :init (which-key-mode)
-    :diminish which-key-mode
-    :config
-    (setq which-key-idle-delay 0.3))
-
-#+end_src
-
-** Leader Bindings
+** Leader Bindings with general.el
 
 The keybindings of my config are mostly set using the package general.el. This makes it easy to use a custom leader key (SPC).
 
@@ -112,12 +112,83 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+end_src
    
-** Evil mode
+** Global Keybindings
+*** TODO File Browsing
+**** Files
+**** Projects
+*** TODO Git
+*** TODO Window Management
+*** TODO Buffers
+*** ESC Cancels all
+   
+ #+begin_src emacs-lisp
 
+   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+ #+end_src
+
+*** Super/Meta Key
+
+ #+begin_src emacs-lisp
+
+   (defconst IS-MAC     (eq system-type 'darwin))
+   (defconst IS-LINUX   (eq system-type 'gnu/linux))
+   (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+   (defconst IS-BSD     (or IS-MAC (eq system-type 'berkeley-unix)))
+
+   (cond
+    (IS-MAC
+     (setq mac-command-modifier      'super
+	   ns-command-modifier       'super
+	   mac-option-modifier       'meta
+	   ns-option-modifier        'meta
+	   mac-right-option-modifier 'none
+	   ns-right-option-modifier  'none))
+    (IS-WINDOWS
+     (setq w32-lwindow-modifier 'super
+	   w32-rwindow-modifier 'super)))
+
+ #+end_src
+
+*** UI Toggles
+
+  #+begin_src emacs-lisp
+
+      (kds/spc-leader
+        "t" '(:ignore t :which-key "toggles")
+        "tw" '(whitespace-mode :which-key "whitespace")
+        "tt" '(counsel-load-theme :which-key "choose theme")
+        "te" '(global-emojify-mode :which-key "emojies"))
+
+  #+end_src
+
+**** TRAMP
+
+  #+begin_src emacs-lisp
+
+    (setq tramp-default-method "ssh")
+
+  #+end_src
+
+** TODO Mode specific Keybindings
+*** TODO Code
+*** TODO Org
+** Keybinding Panel
+  
 #+begin_src emacs-lisp
 
-  (use-package undo-tree
-    :config (global-undo-tree-mode))
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
+
+#+end_src
+
+** Becoming Evil
+*** Evil Mode
+
+#+begin_src emacs-lisp
 
   (use-package evil
     :init
@@ -154,12 +225,37 @@ The keybindings of my config are mostly set using the package general.el. This m
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal))
 
+#+end_src
+
+*** Evil Collection
+    
+#+begin_src emacs-lisp
+
   (use-package evil-collection
     :after evil
     :config
     (evil-collection-init))
 
 #+end_src
+
+*** Undo Tree
+
+#+begin_src emacs-lisp
+
+  (use-package undo-tree
+    :config (global-undo-tree-mode))
+
+#+end_src
+
+*** Rebind C-u
+
+   Since I let evil-mode take over C-u for buffer scrolling, I need to re-bind the universal-argument command to another key sequence. I’m choosing C-M-u for this purpose.
+
+ #+begin_src emacs-lisp
+
+   (global-set-key (kbd "C-M-u") 'universal-argument)
+
+ #+end_src
 
 
 * General Configuration
@@ -222,76 +318,98 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+end_src
 
-** Font
+** Visuals
+*** Font
 
-#+begin_src emacs-lisp
+ #+begin_src emacs-lisp
 
-  (set-face-attribute 'default nil
-          :font "FiraCode Nerd Font Mono"
-          :weight 'light
-          :height 180)
+   (set-face-attribute 'default nil
+           :font "FiraCode Nerd Font Mono"
+           :weight 'light
+           :height 180)
 
-  (set-face-attribute 'fixed-pitch nil
-          :font "FiraCode Nerd Font Mono"
-          :weight 'light
-          :height 180)
+   (set-face-attribute 'fixed-pitch nil
+           :font "FiraCode Nerd Font Mono"
+           :weight 'light
+           :height 180)
 
-  (set-face-attribute 'variable-pitch nil
-          :font "FiraCode Nerd Font"
-          :weight 'light
-          :height 180)
+   (set-face-attribute 'variable-pitch nil
+           :font "FiraCode Nerd Font"
+           :weight 'light
+           :height 180)
 
-#+end_src
+ #+end_src
  
-** Theme
+*** Theme
   
-#+begin_src emacs-lisp
+ #+begin_src emacs-lisp
 
-  (use-package doom-themes
-    :config
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    (load-theme 'doom-dracula t)
-    (doom-themes-visual-bell-config)
-    (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-    (doom-themes-treemacs-config)
-    (doom-themes-org-config))
+   (use-package doom-themes
+     :config
+     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+           doom-themes-enable-italic t) ; if nil, italics is universally disabled
+     (load-theme 'doom-dracula t)
+     (doom-themes-visual-bell-config)
+     (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+     (doom-themes-treemacs-config)
+     (doom-themes-org-config))
 
-#+end_src
+ #+end_src
  
-** Modeline
+*** Modeline
    
-#+begin_src emacs-lisp
+ #+begin_src emacs-lisp
 
-  (use-package doom-modeline
-    :init (doom-modeline-mode 1)
-    :config
-    (setq doom-modeline-height 20)
-    (setq doom-modeline-bar-width 4)
-    (setq doom-modeline-hud nil)
-    (setq doom-modeline-window-width-limit fill-column)
-    (setq doom-modeline-project-detection 'projectile)
-    (setq doom-modeline-buffer-file-name-style 'auto)
-    (setq doom-modeline-major-mode-icon t)
-    (setq doom-modeline-major-mode-color-icon t)
-    (setq doom-modeline-buffer-state-icon t)
-    (setq doom-modeline-buffer-modification-icon t)
-    (setq doom-modeline-minor-modes nil)
-    (setq doom-modeline-enable-word-count t)
-    (setq doom-modeline-continuous-word-count-modes '(markdown-mode org-mode))
-    (setq doom-modeline-lsp t))
+   (use-package doom-modeline
+     :init (doom-modeline-mode 1)
+     :config
+     (setq doom-modeline-height 20)
+     (setq doom-modeline-bar-width 4)
+     (setq doom-modeline-hud nil)
+     (setq doom-modeline-window-width-limit fill-column)
+     (setq doom-modeline-project-detection 'projectile)
+     (setq doom-modeline-buffer-file-name-style 'auto)
+     (setq doom-modeline-major-mode-icon t)
+     (setq doom-modeline-major-mode-color-icon t)
+     (setq doom-modeline-buffer-state-icon t)
+     (setq doom-modeline-buffer-modification-icon t)
+     (setq doom-modeline-minor-modes nil)
+     (setq doom-modeline-enable-word-count t)
+     (setq doom-modeline-continuous-word-count-modes '(markdown-mode org-mode))
+     (setq doom-modeline-lsp t))
 
-#+end_src
+ #+end_src
 
-** Notifications
+*** Icons
+  
+  #+begin_src emacs-lisp
 
-#+begin_src emacs-lisp
+    (use-package all-the-icons)
 
-  (use-package alert
-    :custom alert-default-style 'notifications)
+  #+end_src
 
-#+end_src
+** Dashboard
 
+ #+begin_src emacs-lisp
+
+   (use-package dashboard
+     :init
+     (setq dashboard-set-heading-icons t)
+     (setq dashboard-set-file-icons t)
+     (setq dashboard-banner-logo-title nil)
+     (setq dashboard-project-backend 'projectile)
+     (setq dashboard-center-content t)
+     (setq dashboard-items '((recents . 5)
+                             (agenda . 5)
+                             (bookmarks . 3)
+                             (projects . 3)))
+     (setq dashboard-startup-banner 'logo)
+     (setq dashboard-set-navigator t)
+     :config
+     (dashboard-setup-startup-hook))
+
+ #+end_src
+   
 ** Emojis
 
 #+begin_src emacs-lisp
@@ -303,32 +421,36 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+end_src
 
-** UI Toggles
+** Helpful
+  
+ #+begin_src emacs-lisp
+
+   (use-package helpful
+     :custom
+     (counsel-describe-function-function #'helpful-callable)
+     (counsel-describe-variable-function #'helpful-variable)
+     :bind
+     ([remap describe-function] . counsel-describe-function)
+     ([remap describe-command] . helpful-command)
+     ([remap describe-variable] . counsel-describe-variable)
+     ([remap describe-key] . helpful-key))
+
+ #+end_src
+
+** Command log mode
+  
+ #+begin_src emacs-lisp
+
+   (use-package command-log-mode)
+
+ #+end_src
+
+** Notifications
 
 #+begin_src emacs-lisp
 
-  (kds/spc-leader
-    "t" '(:ignore t :which-key "toggles")
-    "tw" '(whitespace-mode :which-key "whitespace")
-    "tt" '(counsel-load-theme :which-key "choose theme"))
-
-#+end_src
-
-** Highlight Matching Braces
-
-#+begin_src emacs-lisp
-
-  (use-package rainbow-delimiters
-    :hook
-    (prog-mode . rainbow-delimiters-mode))
-
-#+end_src
-
-** TRAMP
-
-#+begin_src emacs-lisp
-
-  (setq tramp-default-method "ssh")
+  (use-package alert
+    :custom alert-default-style 'notifications)
 
 #+end_src
 
@@ -370,8 +492,31 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+end_src
 
-** Completion System
-*** Ivy
+** Highlight Matching Braces
+
+ #+begin_src emacs-lisp
+
+   (use-package rainbow-delimiters
+     :hook
+     (prog-mode . rainbow-delimiters-mode))
+
+ #+end_src
+
+** Set Margins for Modes
+
+#+begin_src emacs-lisp
+
+    (use-package visual-fill-column
+    :hook (text-mode . visual-fill-column-mode)
+    :custom
+    (visual-fill-column-width 100)
+    (visual-fill-column-center-text t))
+
+#+end_src
+
+
+* Completion/Selection System
+** Ivy
   
 #+begin_src emacs-lisp
 
@@ -391,7 +536,7 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+end_src
 
-*** Counsel
+** Counsel
   
 #+begin_src emacs-lisp
 
@@ -404,62 +549,75 @@ The keybindings of my config are mostly set using the package general.el. This m
 #+end_src
 
 
-* org-mode
+* File Browsing
+** TODO Dired
+** TODO Open Files Externally
+
+** Treemacs
+
+ #+begin_src emacs-lisp
+
+   (use-package treemacs)
+
+ #+end_src
+  
+
+* Org Mode
 ** Org Configuration
    
 #+begin_src emacs-lisp
 
-    (setq-default fill-column 80)
+  (setq-default fill-column 80)
 
-    (defun kds/org-mode-setup ()
-      (org-indent-mode)
-      (variable-pitch-mode 1)
-      (auto-fill-mode 0)
-      (visual-line-mode 1)
-      (setq evil-auto-mode 1)
-      (diminish org-indetn-mode))
+  (defun kds/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (auto-fill-mode 0)
+    (visual-line-mode 1)
+    (setq evil-auto-mode 1)
+    (diminish org-indetn-mode))
 
-    (use-package org
-      :hook (kds/org-mode-setup)
-      :config
-      (setq org-ellipsis " >")
-      (setq org-agenda-files '("~/Cloud/org/agenda"))
-      (setq org-hide-emphasis-markers t)
-      (setq org-src-fontify-natively t)
-      (setq org-fontify-quote-and-verse-blocks t)
-      (setq org-src-tab-acts-natively t)
-      (setq org-hide-block-startup nil)
-      (setq org-src-preserve-indentation nil)
-      (setq org-startup-folded 'content)
-      (setq org-cycle-separator-lines 2)
-      (setq org-capture-bookmark nil)
+  (use-package org
+    :hook (kds/org-mode-setup)
+    :config
+    (setq org-ellipsis " >")
+    (setq org-agenda-files '("~/Cloud/org/agenda"))
+    (setq org-hide-emphasis-markers t)
+    (setq org-src-fontify-natively t)
+    (setq org-fontify-quote-and-verse-blocks t)
+    (setq org-src-tab-acts-natively t)
+    (setq org-hide-block-startup nil)
+    (setq org-src-preserve-indentation nil)
+    (setq org-startup-folded 'content)
+    (setq org-cycle-separator-lines 2)
+    (setq org-capture-bookmark nil)
 
-      (setq org-modules '(org-crypt
-                          org-habit
-                          org-bookmark
-                          org-eshell
-                          org-irc))
+    (setq org-modules '(org-crypt
+			org-habit
+			org-bookmark
+			org-eshell
+			org-irc))
 
-      (setq org-outline-path-complete-in-steps nil)
-      (setq org-refile-use-outline-path t)
+    (setq org-outline-path-complete-in-steps nil)
+    (setq org-refile-use-outline-path t)
 
-      (evil-define-key '(normal insert visual) org-mode-map (kbd "C-j") 'org-next-visible-heading)
-      (evil-define-key '(normal insert visual) org-mode-map (kbd "C-k") 'org-previous-visible-heading)
+    (evil-define-key '(normal insert visual) org-mode-map (kbd "C-j") 'org-next-visible-heading)
+    (evil-define-key '(normal insert visual) org-mode-map (kbd "C-k") 'org-previous-visible-heading)
 
-      (evil-define-key '(normal insert visual) org-mode-map (kbd "M-j") 'org-metadown)
-      (evil-define-key '(normal insert visual) org-mode-map (kbd "M-k") 'org-metaup))
+    (evil-define-key '(normal insert visual) org-mode-map (kbd "M-j") 'org-metadown)
+    (evil-define-key '(normal insert visual) org-mode-map (kbd "M-k") 'org-metaup))
 
 #+end_src
 
 #+begin_src emacs-lisp
 
-  (defun kds/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
-          visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
+;;  (defun kds/org-mode-visual-fill ()
+;;   (setq visual-fill-column-width 100
+;;          visual-fill-column-center-text t)
+;;    (visual-fill-column-mode 1))
 
-  (use-package visual-fill-column
-    :hook (org-mode . kds/org-mode-visual-fill))
+;;  (use-package visual-fill-column
+;;    :hook (org-mode . kds/org-mode-visual-fill))
 
 #+end_src
 
@@ -467,10 +625,28 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+begin_src emacs-lisp
 
-  (use-package org-bullets
-    :hook (org-mode . org-bullets-mode)
-    :custom
-    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+  (use-package org-superstar ; "prettier" bullets
+    :hook (org-mode . org-superstar-mode)
+    :config
+    (setq org-superstar-leading-bullet ?\s
+          org-superstar-leading-fallback ?\s
+          org-hide-leading-stars nil
+          org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+#+end_src
+
+** TODO Fonts & Faces
+
+#+begin_src emacs-lisp
+
+#+end_src
+
+** Table of Contents
+
+#+begin_src emacs-lisp
+
+  (use-package org-make-toc
+    :hook org-mode)
 
 #+end_src
 
@@ -493,75 +669,8 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 
 
-* Packages
-** Programming Languages
-*** LSP
-
-#+begin_src emacs-lisp
-
-  (use-package lsp-mode)
-
-#+end_src
- 
-*** Polymode
-
-#+begin_src emacs-lisp
-
-  (use-package polymode)
-
-#+end_src
-
-*** ESS
-
-#+begin_src emacs-lisp
-
-  (use-package ess)
-
-#+end_src
-
-** Misc
-*** Command log mode
-  
-#+begin_src emacs-lisp
-
-  (use-package command-log-mode)
-
-#+end_src
-
-*** Helpful
-  
-#+begin_src emacs-lisp
-
-  (use-package helpful
-    :custom
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
-    :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command] . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key] . helpful-key))
-
-#+end_src
-
-*** Icons
-  
-#+begin_src emacs-lisp
-
-  (use-package all-the-icons)
-
-#+end_src
-
-*** Treemacs
-
-#+begin_src emacs-lisp
-
-  (use-package treemacs)
-
-#+end_src
-  
-** Project Management
-*** Projectile
+* Project Management
+** Projectile
   
 #+begin_src emacs-lisp
 
@@ -596,8 +705,8 @@ The keybindings of my config are mostly set using the package general.el. This m
   
 #+end_src
   
-*** Git
-**** Magit
+** Git
+*** Magit
    
 #+begin_src emacs-lisp
 
@@ -605,7 +714,7 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+end_src
 
-**** Forge
+*** Forge
    
 #+begin_src emacs-lisp
 
@@ -613,26 +722,29 @@ The keybindings of my config are mostly set using the package general.el. This m
 
 #+end_src
 
-** Dashboard
+
+* IDE 
+** LSP
 
 #+begin_src emacs-lisp
 
-  (use-package dashboard
-    :init
-    (setq dashboard-set-heading-icons t)
-    (setq dashboard-set-file-icons t)
-    (setq dashboard-banner-logo-title nil)
-    (setq dashboard-project-backend 'projectile)
-    (setq dashboard-center-content t)
-    (setq dashboard-items '((recents . 5)
-                            (agenda . 5)
-                            (bookmarks . 3)
-                            (projects . 3)))
-    (setq dashboard-startup-banner 'logo)
-    (setq dashboard-set-navigator t)
-    :config
-    (dashboard-setup-startup-hook))
+  (use-package lsp-mode)
 
 #+end_src
-   
+ 
+** Polymode
+
+#+begin_src emacs-lisp
+
+  (use-package polymode)
+
+#+end_src
+
+** ESS
+
+#+begin_src emacs-lisp
+
+  (use-package ess)
+
+#+end_src
 
