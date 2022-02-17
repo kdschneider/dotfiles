@@ -65,14 +65,6 @@ alias vim="nvim"
 alias em="/usr/bin/emacs -nw"
 alias emacs="emacsclient -c -a 'emacs'"
 
-# Doom Emacs
-alias doomsync="$HOME/.emacs.d/bin/doom sync"
-alias doomupgrade="$HOME/.emacs.d/bin/doom upgrade"
-alias doomdoctor="$HOME/.emacs.d/bin/doom doctor"
-alias doompurge="$HOME/.emacs.d/bin/doom purge"
-alias doomclean="$HOME/.emacs.d/bin/doom clean"
-alias doombuild="$HOME/.emacs.d/bin/doom build"
-
 # Changing "ls" to "exa"
 alias ls='exa -al --color=always --group-directories-first' # my preferred listing
 alias la='exa -a --color=always --group-directories-first'  # all files and dirs
@@ -84,6 +76,10 @@ alias cp="cp -i"
 alias mv='mv -i'
 alias rm='rm -i'
 
+# update homebrew
+alias yay='brew install'
+alias yeet='brew uninstall'
+alias yep='brew update && brew upgrade && brew autoremove && brew cleanup'
 
 #---------#
 # PLUGINS #
@@ -106,8 +102,8 @@ export PATH="$HOME/.local/bin:$PATH"
 # --------#
 
 # set colors with pywal
-(cat ~/.cache/wal/sequences &)
-source ~/.cache/wal/colors-tty.sh # tty support
+# (cat ~/.cache/wal/sequences &)
+# source ~/.cache/wal/colors-tty.sh # tty support
 
 neofetch
 eval "$(starship init zsh)"
