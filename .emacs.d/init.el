@@ -1,3 +1,16 @@
+(setq frame-resize-pixelwise t)
+(add-to-list 'default-frame-alist '(undecorated . t))
+
+(defun kds/apply-system-theme (appearance)
+  (interactive)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme 'doom-gruvbox-light t))
+    ('dark (load-theme 'doom-dracula t))))
+
+(add-hook 'ns-system-appearance-change-functions #'kds/apply-system-theme)
+
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ;; ("org" . "https://orgmode.org/elpa/")
@@ -59,8 +72,6 @@
   "tw" '(whitespace-mode :which-key "whitespace")
   "tt" '(counsel-load-theme :which-key "choose theme")
   "te" '(global-emojify-mode :which-key "emojis"))
-
-(setq tramp-default-method "ssh")
 
 (use-package which-key
   :init (which-key-mode)
@@ -198,8 +209,9 @@
                           (agenda . 5)
                           (bookmarks . 3)
                           (projects . 3)))
-  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-startup-banner '1)
   (setq dashboard-set-navigator t)
+  (setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
   :config
   (dashboard-setup-startup-hook))
 
@@ -231,6 +243,8 @@
   :config
   (super-save-mode +1)
   (setq super-save-auto-save-when-idle t))
+
+(setq tramp-default-method "ssh")
 
 (visual-line-mode 1)
 
@@ -271,7 +285,8 @@
 (use-package ivy
   :diminish
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+  (setq ivy-initial-inputs-alist nil))
 
 (use-package ivy-rich
   :after ivy
@@ -292,10 +307,10 @@
 (use-package dired-collapse)
 
 (setq dired-listing-switches "-agho --group-directories-first"
-      dired-omit-files "^\\.[^.].*"
-      dired-omit-verbose nil
-      dired-hide-details-hide-symlink-targets nil
-      delete-by-moving-to-trash t)
+dired-omit-files "^\\.[^.].*"
+dired-omit-verbose nil
+dired-hide-details-hide-symlink-targets nil
+delete-by-moving-to-trash t)
 
 (autoload 'dired-omit-mode "dired-x")
 
@@ -325,14 +340,10 @@
 ;; This is ugly af and keeps breaking.
 ;; TODO: Try to org-modules on their own.
 (defun kds/org-mode-setup ()
-  (interactive)
-  (org-indent-mode)
   (variable-pitch-mode 1)
   (auto-fill-mode 0)
-  (visual-line-mode 1)
+  (visual-line-mode)
   (setq evil-auto-mode 1))
-;; (diminish org-indent-mode))           
-
 
 (use-package org
   :hook (kds/org-mode-setup)
@@ -349,6 +360,7 @@
   (setq org-cycle-separator-lines 2)
   (setq org-capture-bookmark nil)
 
+
   ;; Org Modules
   (setq org-modules '(org-crypt
                       org-habit
@@ -361,18 +373,19 @@
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-use-outline-path t)
 
+
   (evil-define-key '(normal insert visual) org-mode-map (kbd "C-j") 'org-next-visible-heading)
   (evil-define-key '(normal insert visual) org-mode-map (kbd "C-k") 'org-previous-visible-heading)
 
   (evil-define-key '(normal insert visual) org-mode-map (kbd "M-j") 'org-metadown)
   (evil-define-key '(normal insert visual) org-mode-map (kbd "M-k") 'org-metaup)
 
+
   ;; Structure Templates
-  (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("li" . "src lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
   (add-to-list 'org-structure-template-alist '("r" . "src r"))
+
 
   ;; Fonts and Faces
   (set-face-attribute 'org-document-title nil
@@ -393,33 +406,32 @@
                         :weight 'medium
                         :height (cdr face)))
 
-  ;; ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  ;; (set-face-attribute 'org-block nil
-  ;;                     :foreground nil
-  ;;                     :inherit 'fixed-pitch)
-  ;; (set-face-attribute 'org-table nil
-  ;;                     :inherit 'fixed-pitch)
-  ;; (set-face-attribute 'org-formula nil
-  ;;                     :inherit 'fixed-pitch)
-  ;; (set-face-attribute 'org-code nil
-  ;;                     :inherit '(shadow fixed-pitch))
-  ;; ;;(set-face-attribute 'org-indent nil
-  ;; ;;                    :inherit '(org-hide fixed-pitch))
-  ;; (set-face-attribute 'org-verbatim nil
-  ;;                     :inherit '(shadow fixed-pitch))
-  ;; (set-face-attribute 'org-special-keyword nil
-  ;;                     :inherit '(font-lock-comment-face fixed-pitch))
-  ;; (set-face-attribute 'org-meta-line nil
-  ;;                     :inherit '(font-lock-comment-face fixed-pitch))
-  ;; (set-face-attribute 'org-checkbox nil
-  ;;                     :inherit 'fixed-pitch)
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil
+                      :foreground nil
+                      :inherit 'fixed-pitch)
+  (set-face-attribute 'org-table nil
+                      :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil
+                      :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil
+                      :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-indent nil
+  ;;                    :inherit '(org-hide fixed-pitch))
+  (set-face-attribute 'org-verbatim nil
+                      :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil
+                      :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil
+                      :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil
+                      :inherit 'fixed-pitch)
 
-  ;; ;; Get rid of the background on column views
-  ;; (set-face-attribute 'org-column nil
-  ;;                     :background nil)
-  ;; (set-face-attribute 'org-column-title nil
-  ;;                     :background nil))
-  )
+  ;; Get rid of the background on column views
+  (set-face-attribute 'org-column nil
+                      :background nil)
+  (set-face-attribute 'org-column-title nil
+                      :background nil))
 
 (use-package org-superstar
   :after org
@@ -448,6 +460,8 @@
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
 
+(use-package writeroom-mode)
+
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
@@ -455,7 +469,7 @@
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
-  (setq projectile-project-search-path '("~/"))
+  (setq projectile-project-search-path '("~/repos"))
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
@@ -488,7 +502,7 @@
 (use-package poly-R)
 
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-R-mode))
+(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
 
 (use-package ess)
 
